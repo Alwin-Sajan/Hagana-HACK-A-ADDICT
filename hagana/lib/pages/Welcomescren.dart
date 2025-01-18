@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hagana/pages/CommunityPage.dart';
 import 'package:hagana/pages/Homepage.dart';
 import '../error_boundary.dart';
 
@@ -19,7 +20,7 @@ class _WelcomescreenState extends State<Welcomescreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) =>  CommunityPage()),
       );
     });
   }
@@ -27,7 +28,7 @@ class _WelcomescreenState extends State<Welcomescreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ErrorBoundary(
+      body: Container(
         child: Container(
           decoration: const BoxDecoration(
             color: Color.fromRGBO(222, 225, 230, 1.0),
