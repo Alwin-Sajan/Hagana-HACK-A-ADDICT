@@ -57,8 +57,6 @@ class CommunityPage extends StatelessWidget {
               ],
             ),
           ),
-          // Bottom navigation bar
-          
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -126,7 +124,17 @@ class CommunityPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 8.0),
-          ...items.map((item) => cardBuilder(item)).toList(),
+          title == 'Community Posts'
+              ? Column(children: items.map((item) => cardBuilder(item)).toList())
+              : GridView.count(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
+                  children: items.map((item) => cardBuilder(item)).toList(),
+                ),
         ],
       ),
     );
@@ -175,24 +183,26 @@ class CommunityPage extends StatelessWidget {
   Widget _buildGroupCard(Map<String, dynamic> group) {
     return Card(
       color: Color(0xFF2C3E50),
-      margin: EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               group['title'],
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: 4.0),
             Text(
               group['description'],
-              style: TextStyle(color: Colors.white70),
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white70, fontSize: 12),
             ),
             SizedBox(height: 8.0),
             ElevatedButton(
@@ -210,24 +220,26 @@ class CommunityPage extends StatelessWidget {
   Widget _buildCampCard(Map<String, dynamic> camp) {
     return Card(
       color: Color(0xFF2C3E50),
-      margin: EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               camp['title'],
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 8.0),
+            SizedBox(height: 4.0),
             Text(
               camp['content'],
-              style: TextStyle(color: Colors.white70),
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Colors.white70, fontSize: 12),
             ),
           ],
         ),

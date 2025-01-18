@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hagana/pages/CommunityPage.dart';
 // import 'package:hagana/pages/CommunityPage.dart';
 import 'package:hagana/pages/HomePage.dart';
 import 'package:hagana/pages/LoginPage.dart';
