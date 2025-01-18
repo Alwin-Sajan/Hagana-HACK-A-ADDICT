@@ -37,7 +37,8 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.17
   flutter_secure_storage: ^9.2.4
-
+  flutter_native_splash: ^2.2.19
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -90,3 +91,14 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  assets:
+    - assets/images/hagana_logo.png
+
+flutter_native_splash:
+    color: "#051650" # Background color
+    image: assets/images/hagana_logo.png # Path to your splash image (ensure it exists)
+    android: true
+    ios: true
+    web: true
+    fullscreen: true # Optional, removes status bar during the splash
