@@ -3,34 +3,44 @@ import 'package:hagana/pages/ChatPage.dart';
 import 'package:hagana/pages/HaganaHomeScreen.dart';
 import 'package:hagana/pages/HaganaSettings.dart';
 import 'package:hagana/pages/Preventionpage.dart';
+import 'package:provider/provider.dart';
+import 'package:hagana/main.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommunityPage extends StatelessWidget {
   const CommunityPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+
     return Scaffold(
-      backgroundColor: Color(0xFF051650),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: Color(0xFF051650),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: Text(
           'Community',
           style: TextStyle(
-            color: Colors.white,
+            color: isDark ? Colors.white : Colors.black87,
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, color: Colors.white),
+            icon: Icon(Icons.add, 
+              color: isDark ? Colors.white : Colors.black87
+            ),
             onPressed: () {
               // Add post functionality
             },
           ),
           IconButton(
-            icon: Icon(Icons.chat, color: Colors.white),
+            icon: Icon(Icons.chat, 
+              color: isDark ? Colors.white : Colors.black87
+            ),
             onPressed: () {
               Navigator.push(
                 context,
@@ -40,33 +50,48 @@ class CommunityPage extends StatelessWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                _buildSection('Community Posts', [
-                  {'title': 'Post 1', 'likes': 20, 'content': 'This is the content of post 1.'},
-                  {'title': 'Post 2', 'likes': 35, 'content': 'This is the content of post 2.'},
-                  {'title': 'Post 3', 'likes': 50, 'content': 'This is the content of post 3.'},
-                ], _buildPostCard),
-                _buildSection('Groups', [
-                  {'title': 'Group 1', 'description': 'This is group 1.'},
-                  {'title': 'Group 2', 'description': 'This is group 2.'},
-                  {'title': 'Group 3', 'description': 'This is group 3.'},
-                ], _buildGroupCard),
-                _buildSection('Awareness Camp', [
-                  {'title': 'Camp 1', 'content': 'Details about Camp 1.'},
-                  {'title': 'Camp 2', 'content': 'Details about Camp 2.'},
-                  {'title': 'Camp 3', 'content': 'Details about Camp 3.'},
-                ], _buildCampCard),
-              ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  _buildSection('Community Posts', [
+                    {'title': 'Post 1', 'likes': 20, 'content': 'This is the content of post 1.'},
+                    {'title': 'Post 2', 'likes': 35, 'content': 'This is the content of post 2.'},
+                    {'title': 'Post 3', 'likes': 50, 'content': 'This is the content of post 3.'},
+                  ], _buildPostCard, isDark),
+                  _buildSection('Upcoming Events', [
+                    {'title': 'Anti-Drug Day', 'description': 'This is group 1.'},
+                    {'title': 'Marathon', 'description': 'Marathon'},
+                    {'title': 'Let\'s Talk', 'description': 'Webinar'},
+                  ], _buildGroupCard, isDark),
+                  _buildSection('Awareness Camp', [
+                    {
+                      'title': 'Same as U',
+                      'description': 'Join our community of survivors who understand your struggles. Weekly meetings, counseling sessions, and 24/7 support available.',
+                      'link': 'https://sameasu.org'
+                    },
+                    {
+                      'title': 'Nourish',
+                      'description': 'Comprehensive recovery program including therapy, nutrition guidance, fitness training, and mindfulness practices.',
+                      'link': 'https://nourish-recovery.org'
+                    },
+                    {
+                      'title': 'One Life One Shot',
+                      'description': 'Engaging programs designed specifically for young adults, featuring sports activities, art therapy, and career guidance.',
+                      'link': 'https://onelifeoneshot.org'
+                    },
+                  ], _buildCampCard, isDark),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF0A2164),
+        backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
         currentIndex: 2,
         onTap: (index) {
           switch (index) {
@@ -82,12 +107,6 @@ class CommunityPage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => const Preventionpage()),
               );
               break;
-            case 2:
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => CommunityPage()),
-              );
-              break;
             case 3:
               Navigator.pushReplacement(
                 context,
@@ -97,8 +116,8 @@ class CommunityPage extends StatelessWidget {
           }
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white54,
+        selectedItemColor: const Color(0xFF4B7BEC),
+        unselectedItemColor: isDark ? Colors.white54 : Colors.black54,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
@@ -121,40 +140,36 @@ class CommunityPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, List<Map<String, dynamic>> items, Widget Function(Map<String, dynamic>) cardBuilder) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+  Widget _buildSection(String title, List<Map<String, dynamic>> items, 
+      Widget Function(Map<String, dynamic>, bool) cardBuilder, bool isDark) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             title,
             style: TextStyle(
-              color: Colors.white,
+              color: isDark ? Colors.white : Colors.black87,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8.0),
-          title == 'Community Posts'
-              ? Column(children: items.map((item) => cardBuilder(item)).toList())
-              : GridView.count(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  children: items.map((item) => cardBuilder(item)).toList(),
-                ),
+          const SizedBox(height: 8.0),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            itemBuilder: (context, index) => cardBuilder(items[index], isDark),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildPostCard(Map<String, dynamic> post) {
+  Widget _buildPostCard(Map<String, dynamic> post, bool isDark) {
     return Card(
-      color: Color(0xFF2C3E50),
+      color: isDark ? Color(0xFF2C3E50) : Colors.blue.shade50,
       margin: EdgeInsets.symmetric(vertical: 8.0),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -164,7 +179,7 @@ class CommunityPage extends StatelessWidget {
             Text(
               post['title'],
               style: TextStyle(
-                color: Colors.white,
+                color: isDark ? Colors.white : Colors.black87,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -172,17 +187,21 @@ class CommunityPage extends StatelessWidget {
             SizedBox(height: 8.0),
             Text(
               post['content'],
-              style: TextStyle(color: Colors.white70),
+              style: TextStyle(
+                color: isDark ? Colors.white70 : Colors.black54,
+              ),
             ),
             SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Icon(Icons.thumb_up, color: Colors.blue, size: 16),
+                Icon(Icons.thumb_up, color: Color(0xFF4B7BEC), size: 16),
                 SizedBox(width: 4.0),
                 Text(
                   post['likes'].toString(),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
                 ),
               ],
             ),
@@ -192,9 +211,9 @@ class CommunityPage extends StatelessWidget {
     );
   }
 
-  Widget _buildGroupCard(Map<String, dynamic> group) {
+  Widget _buildGroupCard(Map<String, dynamic> group, bool isDark) {
     return Card(
-      color: Color(0xFF2C3E50),
+      color: isDark ? Color(0xFF2C3E50) : Colors.blue.shade50,
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -205,7 +224,7 @@ class CommunityPage extends StatelessWidget {
               group['title'],
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: Colors.white,
+                color: isDark ? Colors.white : Colors.black87,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
@@ -214,14 +233,20 @@ class CommunityPage extends StatelessWidget {
             Text(
               group['description'],
               textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 12),
+              style: TextStyle(
+                color: isDark ? Colors.white70 : Colors.black54,
+                fontSize: 12
+              ),
             ),
             SizedBox(height: 8.0),
             ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF4B7BEC),
+              ),
               onPressed: () {
                 // Join group functionality
               },
-              child: Text('Join Us'),
+              child: Text('Join Us' ,style: TextStyle(color: Colors.white),),
             ),
           ],
         ),
@@ -229,36 +254,173 @@ class CommunityPage extends StatelessWidget {
     );
   }
 
-  Widget _buildCampCard(Map<String, dynamic> camp) {
-    return Card(
-      color: Color(0xFF2C3E50),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(
-              camp['title'],
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+  Widget _buildCampCard(Map<String, dynamic> camp, bool isDark) {
+    return Builder(
+      builder: (BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(vertical: 4.0),
+        color: isDark ? Color(0xFF2C3E50) : Colors.blue.shade50,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                camp['title'],
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black87,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 8.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4B7BEC),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () => _showCampDescription(context, camp, isDark),
+                        child: const Text(
+                          'Learn More',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF4CAF50),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () => _showExternalLinkDialog(context, camp, isDark),
+                        child: const Text(
+                          'Visit Website',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showExternalLinkDialog(BuildContext context, Map<String, dynamic> camp, bool isDark) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
+          title: Text(
+            'External Resource',
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            'You will be redirected to ${camp['title']} website. Do you want to continue?',
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text(
+                'Cancel',
+                style: TextStyle(
+                  color: isDark ? Colors.white70 : Colors.black54,
+                ),
               ),
             ),
-            SizedBox(height: 4.0),
-            Text(
-              camp['content'],
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white70, fontSize: 12),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4B7BEC),
+              ),
+              onPressed: () async {
+                Navigator.of(context).pop();
+                final url = camp['link'];
+                try {
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Could not open link'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: const Text(
+                'Visit',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
-        ),
-      ),
+        );
+      },
     );
   }
 
+  void _showCampDescription(BuildContext context, Map<String, dynamic> camp, bool isDark) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
+          title: Text(
+            camp['title'],
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text(
+            camp['description'],
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black87,
+              fontSize: 16,
+              height: 1.5,
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4B7BEC),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text(
+                'Got it',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 void main() {

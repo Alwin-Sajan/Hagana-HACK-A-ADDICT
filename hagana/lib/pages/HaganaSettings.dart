@@ -4,6 +4,8 @@ import 'HaganaHomeScreen.dart';
 import 'Preventionpage.dart';
 import 'CommunityPage.dart';
 import 'HaganaProfilePage.dart';
+import 'package:provider/provider.dart';
+import 'package:hagana/main.dart';
 
 class HaganaSettings extends StatefulWidget {
   const HaganaSettings({super.key});
@@ -14,25 +16,29 @@ class HaganaSettings extends StatefulWidget {
 
 class _HaganaSettingsState extends State<HaganaSettings> {
   bool _notificationsEnabled = true;
-  bool _darkModeEnabled = false;
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF051650),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF051650),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
         title: Text(
           "Settings",
           style: GoogleFonts.inter(
             fontSize: 20,
             fontWeight: FontWeight.w400,
-            color: Colors.white,
+            color: isDark ? Colors.white : Colors.black87,
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, 
+            color: isDark ? Colors.white : Colors.black87
+          ),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -40,10 +46,11 @@ class _HaganaSettingsState extends State<HaganaSettings> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         children: [
           const SizedBox(height: 16),
-          _buildSection("PROFILE", [
+          _buildSection("PROFILE", isDark, [
             _buildTile(
               icon: Icons.person_outline,
               title: "Edit Profile",
+              isDark: isDark,
               onTap: () {
                 Navigator.push(
                   context,
@@ -53,11 +60,12 @@ class _HaganaSettingsState extends State<HaganaSettings> {
               },
             ),
           ]),
-          _buildSection("APP SETTINGS", [
+          _buildSection("APP SETTINGS", isDark, [
             _buildSwitchTile(
               icon: Icons.notifications_outlined,
               title: "Notifications",
               value: _notificationsEnabled,
+              isDark: isDark,
               onChanged: (value) {
                 setState(() {
                   _notificationsEnabled = value;
@@ -67,18 +75,19 @@ class _HaganaSettingsState extends State<HaganaSettings> {
             _buildSwitchTile(
               icon: Icons.dark_mode_outlined,
               title: "Dark Mode",
-              value: _darkModeEnabled,
+              value: themeProvider.isDarkMode,
+              isDark: isDark,
               onChanged: (value) {
-                setState(() {
-                  _darkModeEnabled = value;
-                });
+                Provider.of<ThemeProvider>(context, listen: false)
+                    .toggleTheme(value);
               },
             ),
           ]),
-          _buildSection("PRIVACY", [
+          _buildSection("PRIVACY", isDark, [
             _buildTile(
               icon: Icons.security_outlined,
               title: "Privacy Settings",
+              isDark: isDark,
               onTap: () {
                 // Add your logic here.
               },
@@ -87,11 +96,11 @@ class _HaganaSettingsState extends State<HaganaSettings> {
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF051650),
+        backgroundColor: isDark ? const Color(0xFF051650) : Colors.white,
         currentIndex: 3,
         elevation: 0,
         selectedItemColor: const Color(0xFF4B7BEC),
-        unselectedItemColor: Colors.white54,
+        unselectedItemColor: isDark ? Colors.white54 : Colors.black54,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
           switch (index) {
@@ -131,7 +140,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
     );
   }
 
-  Widget _buildSection(String title, List<Widget> children) {
+  Widget _buildSection(String title, bool isDark, List<Widget> children) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -142,7 +151,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
             style: GoogleFonts.inter(
               fontSize: 14,
               fontWeight: FontWeight.w500,
-              color: Colors.white54,
+              color: isDark ? Colors.white54 : Colors.black54,
             ),
           ),
         ),
@@ -155,6 +164,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
   Widget _buildTile({
     required IconData icon,
     required String title,
+    required bool isDark,
     VoidCallback? onTap,
   }) {
     return ListTile(
@@ -163,13 +173,16 @@ class _HaganaSettingsState extends State<HaganaSettings> {
       title: Text(
         title,
         style: GoogleFonts.inter(
-          color: Colors.white,
+          color: isDark ? Colors.white : Colors.black87,
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
       ),
-      trailing: Icon(Icons.arrow_forward_ios,
-          size: 16, color: const Color(0xFF4B7BEC)),
+      trailing: Icon(
+        Icons.arrow_forward_ios,
+        size: 16,
+        color: const Color(0xFF4B7BEC)
+      ),
       onTap: onTap,
     );
   }
@@ -178,6 +191,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
     required IconData icon,
     required String title,
     required bool value,
+    required bool isDark,
     required ValueChanged<bool> onChanged,
   }) {
     return ListTile(
@@ -186,7 +200,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
       title: Text(
         title,
         style: GoogleFonts.inter(
-          color: Colors.white,
+          color: isDark ? Colors.white : Colors.black87,
           fontSize: 16,
           fontWeight: FontWeight.w400,
         ),
@@ -195,7 +209,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
         value: value,
         onChanged: onChanged,
         activeColor: const Color(0xFF4B7BEC),
-        inactiveTrackColor: Colors.white24,
+        inactiveTrackColor: isDark ? Colors.white24 : Colors.black12,
       ),
     );
   }
