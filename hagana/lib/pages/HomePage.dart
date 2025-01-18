@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:hagana/pages/SignUp.dart';
-// import '../pages/LoginPage.dart';
-// import 'HomeScreen.dart'; // Import the HaganaHomeScreen here
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:hagana/main.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: const Text(
-          "Hagana Home",
-          style: TextStyle(color: Colors.black, fontSize: 20),
+        title: Text(
+          "Hagana",
+          style: GoogleFonts.allura(
+            color: isDark ? Colors.white : Colors.black87,
+            fontWeight: FontWeight.w500,
+            fontSize: 32,
+          ),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              // Navigate to HaganaHomeScreen on clicking the top-right icon
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SignupPage()),

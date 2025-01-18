@@ -13,6 +13,114 @@ class Preventionpage extends StatefulWidget {
 }
 
 class _PreventionpageState extends State<Preventionpage> {
+  final List<String> personalSafetyTips = [
+    "• Identify and avoid trigger situations",
+    "• Practice mindfulness and meditation",
+    "• Keep a journal of cravings and emotions",
+    "• Exercise regularly to manage stress",
+    "• Develop healthy coping mechanisms",
+    "• Create a daily routine and stick to it",
+    "• Stay connected with supportive family members",
+    "• Find drug-free activities you enjoy",
+    "• Learn to say 'no' confidently",
+    "• Keep emergency contacts readily available",
+  ];
+
+  final List<String> digitalSecurityTips = [
+    "• Block contacts of drug dealers",
+    "• Install addiction recovery apps",
+    "• Join online support groups",
+    "• Enable content filtering",
+    "• Set screen time limits",
+    "• Remove triggering social media",
+    "• Use apps for tracking sobriety",
+    "• Enable location sharing with trusted contacts",
+    "• Install panic button apps",
+    "• Use password protection for recovery resources",
+  ];
+
+  final List<String> communitySafetyTips = [
+    "• Join local support groups",
+    "• Participate in community outreach programs",
+    "• Build a network of sober friends",
+    "• Attend regular counseling sessions",
+    "• Volunteer at recovery centers",
+    "• Share your recovery journey to help others",
+    "• Create safe spaces in your community",
+    "• Organize drug-free social events",
+    "• Support others in their recovery",
+    "• Stay connected with recovery mentors",
+  ];
+
+  void _showStrategyList(BuildContext context, String title, List<String> strategies, bool isDark) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
+          title: Row(
+            children: [
+              Icon(
+                title == "Personal Safety" 
+                    ? Icons.shield_outlined
+                    : title == "Digital Security"
+                        ? Icons.security_outlined
+                        : Icons.people_outline,
+                color: title == "Personal Safety"
+                    ? const Color(0xFF4A90E2)
+                    : title == "Digital Security"
+                        ? const Color(0xFF64B5F6)
+                        : const Color(0xFF90CAF9),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: strategies.map((tip) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4),
+                child: Text(
+                  tip,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black87,
+                    fontSize: 16,
+                    height: 1.5,
+                  ),
+                ),
+              )).toList(),
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF4B7BEC),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: const Text(
+                'Got it',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -27,7 +135,7 @@ class _PreventionpageState extends State<Preventionpage> {
           "Prevention",
           style: TextStyle(
             color: isDark ? Colors.white : Colors.black87,
-            fontWeight: FontWeight.w300,
+            fontWeight: FontWeight.w500,
           ),
         ),
         leading: IconButton(
@@ -43,7 +151,7 @@ class _PreventionpageState extends State<Preventionpage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: isDark ? const Color(0xFF0A2164) : Colors.blue.shade50,
+              color: isDark ? const Color(0xFF0A2164) : Colors.blue,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isDark ? Colors.white12 : Colors.blue.shade100,
@@ -56,7 +164,7 @@ class _PreventionpageState extends State<Preventionpage> {
                   "Stay Safe, Stay Smart",
                   style: TextStyle(
                     fontSize: 24,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: FontWeight.w400,
                     color: isDark ? Colors.white : Colors.black87,
                   ),
                 ),
@@ -75,7 +183,7 @@ class _PreventionpageState extends State<Preventionpage> {
             "Prevention Strategies",
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
               color: isDark ? Colors.white : Colors.black87,
             ),
           ),
@@ -122,6 +230,15 @@ class _PreventionpageState extends State<Preventionpage> {
                     size: 16,
                     color: isDark ? Colors.white54 : Colors.black54,
                   ),
+                  onTap: () {
+                    if (item["title"] == "Personal Safety") {
+                      _showStrategyList(context, "Personal Safety", personalSafetyTips, isDark);
+                    } else if (item["title"] == "Digital Security") {
+                      _showStrategyList(context, "Digital Security", digitalSecurityTips, isDark);
+                    } else if (item["title"] == "Community Safety") {
+                      _showStrategyList(context, "Community Safety", communitySafetyTips, isDark);
+                    }
+                  },
                 ),
               )),
           const SizedBox(height: 24),
@@ -129,7 +246,7 @@ class _PreventionpageState extends State<Preventionpage> {
             "Emergency Contacts",
             style: TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w400,
               color: isDark ? Colors.white : Colors.black87,
             ),
           ),
