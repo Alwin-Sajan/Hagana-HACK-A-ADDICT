@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../init_setup.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'HaganaHomeScreen.dart';
 import 'Preventionpage.dart';
 import 'CommunityPage.dart';
@@ -12,58 +12,38 @@ class HaganaSettings extends StatefulWidget {
   State<HaganaSettings> createState() => _HaganaSettingsState();
 }
 
-
-
 class _HaganaSettingsState extends State<HaganaSettings> {
-  String name = 'Edit Profile';
-  @override
-  void initState() {
-    // TODO: implement initStat
-    super.initState();
-    getName();
-  }
-
-  Future getName() async {
-    var data = SecureStorage();
-
-    name= (await data.getUserName())!;
-    setState(() {});
-  }
+  bool _notificationsEnabled = true;
+  bool _darkModeEnabled = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF051650),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF051650),
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Settings",
-          style: TextStyle(color: Colors.black, fontSize: 20),
+          style: GoogleFonts.inter(
+            fontSize: 20,
+            fontWeight: FontWeight.w400,
+            color: Colors.white,
+          ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Profile Section
-            const Text(
-              "Profile Settings",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: Colors.blue,
-                child: Icon(Icons.person, color: Colors.white),
-              ),
-              title: Text(name),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      body: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        children: [
+          const SizedBox(height: 16),
+          _buildSection("PROFILE", [
+            _buildTile(
+              icon: Icons.person_outline,
+              title: "Edit Profile",
               onTap: () {
                 Navigator.push(
                   context,
@@ -72,51 +52,47 @@ class _HaganaSettingsState extends State<HaganaSettings> {
                 );
               },
             ),
-
-            const SizedBox(height: 24),
-
-            // App Settings Section
-            const Text(
-              "App Settings",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ]),
+          _buildSection("APP SETTINGS", [
+            _buildSwitchTile(
+              icon: Icons.notifications_outlined,
+              title: "Notifications",
+              value: _notificationsEnabled,
+              onChanged: (value) {
+                setState(() {
+                  _notificationsEnabled = value;
+                });
+              },
             ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: const Icon(Icons.notifications),
-              title: const Text("Notifications"),
-              trailing: Switch(
-                value: true,
-                onChanged: (value) {},
-              ),
+            _buildSwitchTile(
+              icon: Icons.dark_mode_outlined,
+              title: "Dark Mode",
+              value: _darkModeEnabled,
+              onChanged: (value) {
+                setState(() {
+                  _darkModeEnabled = value;
+                });
+              },
             ),
-            ListTile(
-              leading: const Icon(Icons.dark_mode),
-              title: const Text("Dark Mode"),
-              trailing: Switch(
-                value: false,
-                onChanged: (value) {},
-              ),
+          ]),
+          _buildSection("PRIVACY", [
+            _buildTile(
+              icon: Icons.security_outlined,
+              title: "Privacy Settings",
+              onTap: () {
+                // Add your logic here.
+              },
             ),
-
-            const SizedBox(height: 24),
-
-            // Privacy Section
-            const Text(
-              "Privacy",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: const Icon(Icons.security),
-              title: const Text("Privacy Settings"),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-              onTap: () {},
-            ),
-          ],
-        ),
+          ]),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF051650),
         currentIndex: 3,
+        elevation: 0,
+        selectedItemColor: const Color(0xFF4B7BEC),
+        unselectedItemColor: Colors.white54,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           switch (index) {
             case 0:
@@ -135,22 +111,91 @@ class _HaganaSettingsState extends State<HaganaSettings> {
             case 2:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) =>  CommunityPage()),
+                MaterialPageRoute(builder: (context) => CommunityPage()),
               );
               break;
           }
         },
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.health_and_safety), label: "Prevention"),
-          BottomNavigationBarItem(icon: Icon(Icons.people), label: "Community"),
+              icon: Icon(Icons.home_outlined), label: "Home"),
           BottomNavigationBarItem(
-              icon: Icon(Icons.settings), label: "Settings"),
+              icon: Icon(Icons.health_and_safety_outlined),
+              label: "Prevention"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.people_outline), label: "Community"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.settings_outlined), label: "Settings"),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSection(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Text(
+            title,
+            style: GoogleFonts.inter(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.white54,
+            ),
+          ),
+        ),
+        ...children,
+        const SizedBox(height: 8),
+      ],
+    );
+  }
+
+  Widget _buildTile({
+    required IconData icon,
+    required String title,
+    VoidCallback? onTap,
+  }) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+      leading: Icon(icon, color: const Color(0xFF4B7BEC)),
+      title: Text(
+        title,
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      trailing: Icon(Icons.arrow_forward_ios,
+          size: 16, color: const Color(0xFF4B7BEC)),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildSwitchTile({
+    required IconData icon,
+    required String title,
+    required bool value,
+    required ValueChanged<bool> onChanged,
+  }) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+      leading: Icon(icon, color: const Color(0xFF4B7BEC)),
+      title: Text(
+        title,
+        style: GoogleFonts.inter(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+      trailing: Switch(
+        value: value,
+        onChanged: onChanged,
+        activeColor: const Color(0xFF4B7BEC),
+        inactiveTrackColor: Colors.white24,
       ),
     );
   }

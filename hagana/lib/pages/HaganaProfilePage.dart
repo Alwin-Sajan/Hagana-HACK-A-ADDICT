@@ -14,7 +14,7 @@ class HaganaProfilePage extends StatelessWidget {
         style: GoogleFonts.inter(
           fontSize: 18.0,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          color: Colors.white,
         ),
       ),
     );
@@ -29,7 +29,7 @@ class HaganaProfilePage extends StatelessWidget {
         decoration: InputDecoration(
           labelText: label + (isOptional ? " (Optional)" : ""),
           labelStyle: GoogleFonts.inter(
-            color: Colors.grey[600],
+            color: Colors.white,
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -44,7 +44,7 @@ class HaganaProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFF051650),
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -120,6 +120,7 @@ class HaganaProfilePage extends StatelessWidget {
               DropdownButtonFormField<String>(
                 decoration: InputDecoration(
                   labelText: "Gender",
+                  labelStyle: TextStyle(color: Colors.white),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
