@@ -3,6 +3,8 @@ import 'package:hagana/init_setup.dart';
 import 'package:hagana/pages/HaganaProfilePage.dart';
 import 'package:hagana/pages/HomePage.dart';
 import 'package:hagana/pages/LoginPage.dart';
+import 'package:provider/provider.dart';
+import 'package:hagana/main.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -19,91 +21,101 @@ class _LoginPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+
     return Scaffold(
-      backgroundColor: Color(0xFF051650),
+      backgroundColor: isDark ? const Color(0xFF051650) : Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: isDark ? Colors.white : Colors.black87,
+          ),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const HomeScreen()),
+            );
+          },
+        ),
+      ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 40),
-
-            // Clickable Heading
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomeScreen()),
-                );
-              },
-              child: const Center(
-                child: Text(
-                  "Hagana Register",
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
+            Text(
+              "Hagana Register",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const SizedBox(height: 20),
-
-            // Container with shadow
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Color(0xFF1A237E),
+                color: isDark ? const Color(0xFF1A237E) : Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withOpacity(0.1),
                     spreadRadius: 2,
                     blurRadius: 8,
-                    offset: const Offset(0, 4), // Shadow position
+                    offset: const Offset(0, 4),
                   ),
                 ],
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Welcome Text
-                  const Text(
+                  Text(
                     "Welcome",
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 5),
-                  const Text(
+                  Text(
                     "Create an account",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.white70,
+                      color: isDark ? Colors.white70 : Colors.black54,
                     ),
                   ),
-                  const SizedBox(height: 20),
-
                   // Email Field
-                  const Text(
+                  Text(
                     "Email",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     onChanged: (value) => email = value,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black87
+                    ),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Color(0xFF283593),
+                      fillColor: isDark ? Color(0xFF283593) : Colors.grey[200],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter your email",
-                      hintStyle: TextStyle(color: Colors.white70),
+                      hintStyle: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.black54
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
@@ -113,24 +125,32 @@ class _LoginPageState extends State<SignupPage> {
                   const SizedBox(height: 16),
 
                   // Password Field
-                  const Text(
+                  Text(
                     "Password",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: isDark ? Colors.white : Colors.black87
+                    ),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     onChanged: (value) => password = value,
                     obscureText: true,
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black87
+                    ),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Color(0xFF283593),
+                      fillColor: isDark ? Color(0xFF283593) : Colors.grey[200],
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter your password",
-                      hintStyle: TextStyle(color: Colors.white70),
+                      hintStyle: TextStyle(
+                        color: isDark ? Colors.white70 : Colors.black54
+                      ),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
@@ -149,13 +169,16 @@ class _LoginPageState extends State<SignupPage> {
                             isChecked = value ?? false;
                           });
                         },
-                        activeColor: Colors.white,
-                        checkColor: Color(0xFF051650),
+                        activeColor: Color(0xFF4B7BEC),
+                        checkColor: Colors.white,
                       ),
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           "I agree with Terms & Conditions",
-                          style: TextStyle(fontSize: 14, color: Colors.white70),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark ? Colors.white70 : Colors.black54
+                          ),
                         ),
                       ),
                     ],
@@ -203,24 +226,24 @@ class _LoginPageState extends State<SignupPage> {
                   const SizedBox(height: 16),
 
                   // OR SIGN UP WITH
-                  const Center(
+                  Center(
                     child: Text(
                       "OR SIGN UP WITH",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white70,
+                        color: isDark ? Colors.white70 : Colors.black54,
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
 
                   // Social Media Text
-                  const Center(
+                  Center(
                     child: Text(
                       "using Google",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.white70,
+                        color: isDark ? Colors.white70 : Colors.black54,
                       ),
                     ),
                   ),
@@ -230,32 +253,27 @@ class _LoginPageState extends State<SignupPage> {
                   Center(
                     child: Column(
                       children: [
-                        const Text(
+                        Text(
                           "Already have an account?",
-                          style: TextStyle(fontSize: 14, color: Colors.white70),
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: isDark ? Colors.white70 : Colors.black54
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const LoginPage()),
+                                builder: (context) => const LoginPage(),
+                              ),
                             );
-                            if (!email.isNotEmpty && !password.isNotEmpty) {
-                              // Show error if fields are empty
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                      "Please enter your email and password."),
-                                ),
-                              );
-                            }
                           },
                           child: const Text(
-                            "Sign in",
+                            "Login",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFF636AE8),
+                              color: Color(0xFF4B7BEC),
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -266,7 +284,6 @@ class _LoginPageState extends State<SignupPage> {
                 ],
               ),
             ),
-
             const SizedBox(height: 32), // Bottom margin
           ],
         ),

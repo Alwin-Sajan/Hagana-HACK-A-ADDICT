@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'Preventionpage.dart';
 import 'CommunityPage.dart';
 import 'HaganaSettings.dart';
+import 'package:provider/provider.dart';
+import 'package:hagana/main.dart';
 
 class HaganaHomeScreen extends StatefulWidget {
   const HaganaHomeScreen({super.key});
@@ -13,22 +15,26 @@ class HaganaHomeScreen extends StatefulWidget {
 class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    final isDark = themeProvider.isDarkMode;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF051650),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF051650),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text(
+        title: Text(
           "Hagana",
           style: TextStyle(
-            color: Colors.white,
+            color: isDark ? Colors.white : Colors.black87,
             fontWeight: FontWeight.w300,
             fontSize: 20,
           ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.person_outline, color: Colors.white),
+            icon: Icon(Icons.person_outline, 
+              color: isDark ? Colors.white : Colors.black87),
             onPressed: () {},
           ),
         ],
@@ -41,11 +47,13 @@ class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: const Color(0xFF0A2164),
+                color: isDark ? const Color(0xFF0A2164) : Colors.blue.shade50,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white12),
+                border: Border.all(
+                  color: isDark ? Colors.white12 : Colors.blue.shade100,
+                ),
               ),
-              child: const Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -53,24 +61,26 @@ class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w300,
-                      color: Colors.white,
+                      color: isDark ? Colors.white : Colors.black87,
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
                     "Your personal safety companion",
-                    style: TextStyle(color: Colors.white70),
+                    style: TextStyle(
+                      color: isDark ? Colors.white70 : Colors.black54,
+                    ),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: 24),
-            const Text(
+            Text(
               "Quick Actions",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w300,
-                color: Colors.white,
+                color: isDark ? Colors.white : Colors.black87,
               ),
             ),
             const SizedBox(height: 12),
@@ -78,9 +88,11 @@ class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
               (action) => Container(
                 margin: const EdgeInsets.only(bottom: 8),
                 decoration: BoxDecoration(
-                  color: const Color(0xFF0A2164),
+                  color: isDark ? const Color(0xFF0A2164) : Colors.blue.shade50,
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.white12),
+                  border: Border.all(
+                    color: isDark ? Colors.white12 : Colors.blue.shade100,
+                  ),
                 ),
                 child: ListTile(
                   leading: Icon(
@@ -97,15 +109,15 @@ class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
                   ),
                   title: Text(
                     action,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: isDark ? Colors.white : Colors.black87,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
-                  trailing: const Icon(
+                  trailing: Icon(
                     Icons.arrow_forward_ios,
                     size: 16,
-                    color: Colors.white54,
+                    color: isDark ? Colors.white54 : Colors.black54,
                   ),
                 ),
               ),
@@ -114,7 +126,7 @@ class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFF0A2164),
+        backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
         currentIndex: 0,
         onTap: (index) {
           switch (index) {
@@ -139,8 +151,8 @@ class _HaganaHomeScreenState extends State<HaganaHomeScreen> {
           }
         },
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white54,
+        selectedItemColor: isDark ? Colors.white : Colors.blue,
+        unselectedItemColor: isDark ? Colors.white54 : Colors.grey,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
