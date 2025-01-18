@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hagana/init_setup.dart';
 import 'package:hagana/pages/HaganaProfilePage.dart';
 import 'package:hagana/pages/HomePage.dart';
+import 'package:hagana/pages/LoginPage.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -17,9 +18,9 @@ class _LoginPageState extends State<SignupPage> {
   var initData = SecureStorage();
 
   @override
-  Widget build(BuildContext context)  {
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xFF051650),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,7 +41,7 @@ class _LoginPageState extends State<SignupPage> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -52,11 +53,11 @@ class _LoginPageState extends State<SignupPage> {
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 32),
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Color(0xFF1A237E),
                 borderRadius: BorderRadius.circular(12),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.2),
+                    color: Colors.black.withOpacity(0.2),
                     spreadRadius: 2,
                     blurRadius: 8,
                     offset: const Offset(0, 4), // Shadow position
@@ -72,7 +73,7 @@ class _LoginPageState extends State<SignupPage> {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 5),
@@ -80,7 +81,7 @@ class _LoginPageState extends State<SignupPage> {
                     "Create an account",
                     style: TextStyle(
                       fontSize: 16,
-                      color: Colors.grey,
+                      color: Colors.white70,
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -88,19 +89,21 @@ class _LoginPageState extends State<SignupPage> {
                   // Email Field
                   const Text(
                     "Email",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     onChanged: (value) => email = value,
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: Color(0xFF283593),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter your email",
+                      hintStyle: TextStyle(color: Colors.white70),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
@@ -112,20 +115,22 @@ class _LoginPageState extends State<SignupPage> {
                   // Password Field
                   const Text(
                     "Password",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     onChanged: (value) => password = value,
                     obscureText: true,
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       filled: true,
-                      fillColor: Colors.grey[100],
+                      fillColor: Color(0xFF283593),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide.none,
                       ),
                       hintText: "Enter your password",
+                      hintStyle: TextStyle(color: Colors.white70),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
@@ -144,18 +149,20 @@ class _LoginPageState extends State<SignupPage> {
                             isChecked = value ?? false;
                           });
                         },
+                        activeColor: Colors.white,
+                        checkColor: Color(0xFF051650),
                       ),
                       const Expanded(
                         child: Text(
                           "I agree with Terms & Conditions",
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          style: TextStyle(fontSize: 14, color: Colors.white70),
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 16),
 
-                  // Sign Up Buttzn
+                  // Sign Up Button
                   ElevatedButton(
                     onPressed: () async {
                       if (email.isNotEmpty &&
@@ -181,7 +188,7 @@ class _LoginPageState extends State<SignupPage> {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
+                      backgroundColor: Color(0xFF0A1A80),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -201,7 +208,7 @@ class _LoginPageState extends State<SignupPage> {
                       "OR SIGN UP WITH",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: Colors.white70,
                       ),
                     ),
                   ),
@@ -213,7 +220,7 @@ class _LoginPageState extends State<SignupPage> {
                       "using Google",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        color: Colors.white70,
                       ),
                     ),
                   ),
@@ -225,19 +232,16 @@ class _LoginPageState extends State<SignupPage> {
                       children: [
                         const Text(
                           "Already have an account?",
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          style: TextStyle(fontSize: 14, color: Colors.white70),
                         ),
                         TextButton(
                           onPressed: () {
-                            if (email.isNotEmpty && password.isNotEmpty) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                  const HaganaProfilePage(),
-                                ),
-                              );
-                            } else {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()),
+                            );
+                            if (!email.isNotEmpty && !password.isNotEmpty) {
                               // Show error if fields are empty
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -251,7 +255,7 @@ class _LoginPageState extends State<SignupPage> {
                             "Sign in",
                             style: TextStyle(
                               fontSize: 14,
-                              color: Color(0xFF636AE8), // #636AE8 color
+                              color: Color(0xFF636AE8),
                               fontWeight: FontWeight.bold,
                             ),
                           ),

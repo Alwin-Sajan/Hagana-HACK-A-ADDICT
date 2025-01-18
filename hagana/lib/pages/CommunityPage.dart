@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hagana/pages/HaganaHomeScreen.dart';
+import 'package:hagana/pages/HaganaSettings.dart';
+import 'package:hagana/pages/Preventionpage.dart';
 
 class CommunityPage extends StatelessWidget {
   @override
@@ -55,18 +58,53 @@ class CommunityPage extends StatelessWidget {
             ),
           ),
           // Bottom navigation bar
-          Container(
-            color: Color(0xFF2C3E50),
-            padding: EdgeInsets.symmetric(vertical: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                _buildNavBarItem(Icons.home, 'Home', false, context, '/home'),
-                _buildNavBarItem(Icons.shield, 'Prevention', false, context, '/prevention'),
-                _buildNavBarItem(Icons.people, 'Community', true, context, '/community'),
-                _buildNavBarItem(Icons.settings, 'Settings', false, context, '/settings'),
-              ],
-            ),
+          
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF0A2164),
+        currentIndex: 2,
+        onTap: (index) {
+          switch (index) {
+            case 1:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const Preventionpage()),
+              );
+              break;
+            case 2:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => CommunityPage()),
+              );
+              break;
+            case 3:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HaganaSettings()),
+              );
+              break;
+          }
+        },
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_outlined),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.health_and_safety_outlined),
+            label: "Prevention",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people_outline),
+            label: "Community",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings_outlined),
+            label: "Settings",
           ),
         ],
       ),
