@@ -1,4 +1,4 @@
-
+![Banner](https://github.com/Alwin-Sajan/Hagana-HACK-A-ADDICT/blob/main/hagana/assets/images/Blue%20Gold%20Elegant%20Minimalist%20Digital%20Marketer%20LinkedIn%20Banner.png?raw=true)
 
 # Hagana
 
