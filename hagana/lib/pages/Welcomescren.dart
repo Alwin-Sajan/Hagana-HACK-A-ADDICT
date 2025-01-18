@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hagana/pages/HaganaProfilePage.dart';
-import 'package:hagana/pages/HaganaSettings.dart';
 // import 'package:hagana/pages/CommunityPage.dart';
 import 'package:hagana/pages/HomePage.dart';
+import 'package:hagana/pages/LoginPage.dart';
+import 'package:hagana/pages/SignUp.dart';
 // import 'package:hagana/pages/Homepage.dart';
 // import '../error_boundary.dart';
 
@@ -23,7 +23,7 @@ class _WelcomescreenState extends State<Welcomescreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) =>  HomeScreen()),
       );
     });
   }
