@@ -5,7 +5,7 @@ import 'package:hagana/pages/HomePage.dart';
 import 'package:hagana/pages/LoginPage.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({Key? key}) : super(key: key);
+  const SignupPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();

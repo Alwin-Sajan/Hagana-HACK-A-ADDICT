@@ -31,13 +31,13 @@ class _WelcomescreenState extends State<Welcomescreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Color(0xFF051650), // New background color #051650
+          color: Color(0xFF051650), // Background color #051650
         ),
         child: Center(
           child: Image.asset(
             'assets/images/hagana_logo.png',
-            width: MediaQuery.of(context).size.width *
-                1.0, // Increased from 0.8 to 0.9 (90% of screen width)
+            width:
+                MediaQuery.of(context).size.width * 0.9, // 90% of screen width
             fit: BoxFit.contain,
           ),
         ),

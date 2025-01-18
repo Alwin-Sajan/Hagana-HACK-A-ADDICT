@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hagana/pages/SignUp.dart';
-import '../pages/LoginPage.dart';
-// import 'HomeScreen.dart'; // Import the HaganaHomeScreen here
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,28 +35,7 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: "Search for content...",
-                  hintStyle: const TextStyle(color: Colors.white60),
-                  prefixIcon: const Icon(Icons.search, color: Colors.white60),
-                  filled: true,
-                  fillColor: const Color(0xFF0A2164),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white12),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
+            const SizedBox(height: 16),
             Container(
               height: 200,
               margin: const EdgeInsets.only(top: 8.0),
@@ -149,6 +126,29 @@ class HomeScreen extends StatelessWidget {
       ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: const Color(0xFF0A2164),
+        currentIndex: 0,
+        onTap: (index) {
+          switch (index) {
+            case 1:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const SignupPage()),
+              );
+              break;
+            case 2:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => SignupPage()),
+              );
+              break;
+            case 3:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const SignupPage()),
+              );
+              break;
+          }
+        },
         type: BottomNavigationBarType.fixed,
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white54,
@@ -219,7 +219,7 @@ class HomeScreen extends StatelessWidget {
           title,
           textAlign: TextAlign.center,
           style: const TextStyle(
-            fontSize: 14,
+            fontSize: 11,
             color: Colors.white70,
           ),
         ),

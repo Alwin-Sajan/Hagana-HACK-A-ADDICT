@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'HaganaHomeScreen.dart';
-import 'HaganaSettings.dart';
 
 class HaganaProfilePage extends StatelessWidget {
   const HaganaProfilePage({super.key});
