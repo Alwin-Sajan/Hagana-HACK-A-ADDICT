@@ -9,23 +9,27 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFF051650),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFF051650),
         elevation: 0,
         title: const Text(
           "Hagana Home",
-          style: TextStyle(color: Colors.black, fontSize: 20),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w300,
+            fontSize: 20,
+          ),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              // Navigate to HaganaHomeScreen on clicking the top-right icon
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const SignupPage()),
               );
             },
-            icon: const Icon(Icons.person, color: Colors.black),
+            icon: const Icon(Icons.person_outline, color: Colors.white),
           ),
         ],
       ),
@@ -33,66 +37,75 @@ class HomeScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Search Bar
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
               child: TextField(
                 decoration: InputDecoration(
                   hintText: "Search for content...",
-                  prefixIcon: const Icon(Icons.search),
+                  hintStyle: const TextStyle(color: Colors.white60),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white60),
                   filled: true,
-                  fillColor: Colors.grey[200],
+                  fillColor: const Color(0xFF0A2164),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
                     borderSide: BorderSide.none,
                   ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white12),
+                  ),
                 ),
+                style: const TextStyle(color: Colors.white),
               ),
             ),
-
-            // Scrollable Cards
             Container(
               height: 200,
               margin: const EdgeInsets.only(top: 8.0),
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
-                  _buildCard("Educational Content", Icons.school, Colors.blue),
-                  _buildCard("Prevention Tips", Icons.health_and_safety, Colors.green),
-                  _buildCard("Community", Icons.people, Colors.purple),
-                  _buildCard("Support", Icons.support, Colors.orange),
+                  _buildCard("Educational Content", Icons.school_outlined,
+                      const Color(0xFF4A90E2)),
+                  _buildCard(
+                      "Prevention Tips",
+                      Icons.health_and_safety_outlined,
+                      const Color(0xFF64B5F6)),
+                  _buildCard("Community", Icons.people_outline,
+                      const Color(0xFF90CAF9)),
+                  _buildCard("Support", Icons.support_outlined,
+                      const Color(0xFF82B1FF)),
                 ],
               ),
             ),
-
-            // Welcome Section
             const SizedBox(height: 24),
             const Text(
               "Welcome to Hagana",
               style: TextStyle(
                 fontSize: 24,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w300,
+                color: Colors.white,
               ),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                // Navigate to HaganaHomeScreen on clicking "Get Started"
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const SignupPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: const Color(0xFF4A90E2),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
               child: const Text(
                 "Get Started",
-                style: TextStyle(fontSize: 16,color: Colors.white),
+                style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
             const SizedBox(height: 8),
@@ -101,11 +114,9 @@ class HomeScreen extends StatelessWidget {
               child: Text(
                 "Join us in building a supportive community for all.",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 16, color: Colors.grey),
+                style: TextStyle(fontSize: 16, color: Colors.white70),
               ),
             ),
-
-            // Additional Home Page Content
             const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -114,16 +125,20 @@ class HomeScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildQuickTip("Secure your belongings", Icons.lock, Colors.green),
-                      _buildQuickTip("Share knowledge", Icons.people, Colors.blue),
+                      _buildQuickTip("Secure your belongings",
+                          Icons.lock_outline, const Color(0xFF64B5F6)),
+                      _buildQuickTip("Share knowledge", Icons.people_outline,
+                          const Color(0xFF90CAF9)),
                     ],
                   ),
                   const SizedBox(height: 16),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      _buildQuickTip("Stay informed", Icons.info, Colors.orange),
-                      _buildQuickTip("Build community", Icons.group, Colors.purple),
+                      _buildQuickTip("Stay informed", Icons.info_outline,
+                          const Color(0xFF82B1FF)),
+                      _buildQuickTip("Build community", Icons.group_outlined,
+                          const Color(0xFF4A90E2)),
                     ],
                   ),
                 ],
@@ -132,27 +147,26 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-
-      // Bottom Navigation Bar
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: const Color(0xFF0A2164),
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: Colors.blue,
-        unselectedItemColor: Colors.grey,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white54,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
             label: "Home",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.health_and_safety),
+            icon: Icon(Icons.health_and_safety_outlined),
             label: "Prevention",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
+            icon: Icon(Icons.people_outline),
             label: "Community",
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings_outlined),
             label: "Settings",
           ),
         ],
@@ -160,14 +174,14 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  // Helper method to build a card
   Widget _buildCard(String title, IconData icon, Color color) {
     return Container(
       width: 160,
       margin: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: const Color(0xFF0A2164),
         borderRadius: BorderRadius.circular(12.0),
+        border: Border.all(color: Colors.white12),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -177,27 +191,37 @@ class HomeScreen extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: color),
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w300,
+              color: Colors.white,
+            ),
           ),
         ],
       ),
     );
   }
 
-  // Helper method to build quick tip items
   Widget _buildQuickTip(String title, IconData icon, Color color) {
     return Column(
       children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: color.withOpacity(0.1),
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF0A2164),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white12),
+          ),
           child: Icon(icon, size: 30, color: color),
         ),
         const SizedBox(height: 8),
         Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 14),
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.white70,
+          ),
         ),
       ],
     );
