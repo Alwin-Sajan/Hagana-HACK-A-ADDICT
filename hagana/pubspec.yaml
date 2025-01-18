@@ -37,7 +37,7 @@ dependencies:
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.17
   flutter_secure_storage: ^9.2.4
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -90,3 +90,6 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  assets:
+    - assets/images/hagana_logo.png
