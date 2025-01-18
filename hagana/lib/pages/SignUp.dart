@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hagana/init_setup.dart';
-import 'package:hagana/pages/HaganaProfilePage.dart';
 import 'package:hagana/pages/HomePage.dart';
 import 'package:hagana/pages/LoginPage.dart';
 import 'package:provider/provider.dart';
 import 'package:hagana/main.dart';
+import 'package:hagana/pages/HaganaProfilePage.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -17,7 +17,49 @@ class _LoginPageState extends State<SignupPage> {
   bool isChecked = false;
   String email = "";
   String password = "";
-  var initData = SecureStorage();
+  final _secureStorage = SecureStorage();
+  bool _isLoading = false;
+
+  Future<void> _handleSignUp() async {
+    if (email.isNotEmpty && password.isNotEmpty && isChecked) {
+      setState(() => _isLoading = true);
+
+      try {
+        await _secureStorage.setUserName(email);
+        await _secureStorage.setPassWord(password);
+        await _secureStorage.setLoggedIn(true);
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HaganaProfilePage(),
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Error: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      } finally {
+        if (mounted) {
+          setState(() => _isLoading = false);
+        }
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('Please fill all fields and accept Terms & Conditions.'),
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,17 +136,15 @@ class _LoginPageState extends State<SignupPage> {
                   Text(
                     "Email",
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87
-                    ),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     onChanged: (value) => email = value,
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87
-                    ),
+                        color: isDark ? Colors.white : Colors.black87),
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: isDark ? Color(0xFF283593) : Colors.grey[200],
@@ -114,8 +154,7 @@ class _LoginPageState extends State<SignupPage> {
                       ),
                       hintText: "Enter your email",
                       hintStyle: TextStyle(
-                        color: isDark ? Colors.white70 : Colors.black54
-                      ),
+                          color: isDark ? Colors.white70 : Colors.black54),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
@@ -128,18 +167,16 @@ class _LoginPageState extends State<SignupPage> {
                   Text(
                     "Password",
                     style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                      color: isDark ? Colors.white : Colors.black87
-                    ),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: isDark ? Colors.white : Colors.black87),
                   ),
                   const SizedBox(height: 8),
                   TextField(
                     onChanged: (value) => password = value,
                     obscureText: true,
                     style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87
-                    ),
+                        color: isDark ? Colors.white : Colors.black87),
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: isDark ? Color(0xFF283593) : Colors.grey[200],
@@ -149,8 +186,7 @@ class _LoginPageState extends State<SignupPage> {
                       ),
                       hintText: "Enter your password",
                       hintStyle: TextStyle(
-                        color: isDark ? Colors.white70 : Colors.black54
-                      ),
+                          color: isDark ? Colors.white70 : Colors.black54),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 14,
@@ -176,9 +212,8 @@ class _LoginPageState extends State<SignupPage> {
                         child: Text(
                           "I agree with Terms & Conditions",
                           style: TextStyle(
-                            fontSize: 14,
-                            color: isDark ? Colors.white70 : Colors.black54
-                          ),
+                              fontSize: 14,
+                              color: isDark ? Colors.white70 : Colors.black54),
                         ),
                       ),
                     ],
@@ -187,41 +222,21 @@ class _LoginPageState extends State<SignupPage> {
 
                   // Sign Up Button
                   ElevatedButton(
-                    onPressed: () async {
-                      if (email.isNotEmpty &&
-                          password.isNotEmpty &&
-                          isChecked) {
-                        await initData.setUserName(email);
-                        await initData.setPassWord(password);
-                        print((await initData.getPassWord()));
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const HaganaProfilePage(),
-                          ),
-                        );
-                      } else {
-                        // Show validation message
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                                "Please fill all fields and accept Terms & Conditions."),
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: _isLoading ? null : _handleSignUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF0A1A80),
+                      backgroundColor: const Color(0xFF0A1A80),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: 14),
                       minimumSize: const Size(double.infinity, 48),
                     ),
-                    child: const Text(
-                      "Sign Up",
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text(
+                            "Sign Up",
+                            style: TextStyle(fontSize: 16, color: Colors.white),
+                          ),
                   ),
                   const SizedBox(height: 16),
 
@@ -256,9 +271,8 @@ class _LoginPageState extends State<SignupPage> {
                         Text(
                           "Already have an account?",
                           style: TextStyle(
-                            fontSize: 14,
-                            color: isDark ? Colors.white70 : Colors.black54
-                          ),
+                              fontSize: 14,
+                              color: isDark ? Colors.white70 : Colors.black54),
                         ),
                         TextButton(
                           onPressed: () {

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:hagana/main.dart';
+import 'package:hagana/init_setup.dart';
+import 'package:hagana/pages/HomePage.dart';
 
 class HaganaProfilePage extends StatefulWidget {
   const HaganaProfilePage({super.key});
@@ -10,16 +12,20 @@ class HaganaProfilePage extends StatefulWidget {
 }
 
 class _HaganaProfilePageState extends State<HaganaProfilePage> {
+  final _secureStorage = SecureStorage();
+  bool _isLoading = false;
   bool _isEditing = false;
   final _formKey = GlobalKey<FormState>();
-  
+
   // Controllers for text fields
   final TextEditingController _nicknameController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _emergencyContactController = TextEditingController();
-  final TextEditingController _emergencyPhoneController = TextEditingController();
+  final TextEditingController _emergencyContactController =
+      TextEditingController();
+  final TextEditingController _emergencyPhoneController =
+      TextEditingController();
 
   // Profile preferences
   bool _isAnonymous = true;
@@ -29,13 +35,73 @@ class _HaganaProfilePageState extends State<HaganaProfilePage> {
   @override
   void initState() {
     super.initState();
-    // Initialize with dummy data (replace with actual user data)
-    _nicknameController.text = "Hope123";
-    _fullNameController.text = "John Doe";
-    _emailController.text = "john@example.com";
-    _phoneController.text = "+1234567890";
-    _emergencyContactController.text = "Jane Doe";
-    _emergencyPhoneController.text = "+1987654321";
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    setState(() => _isLoading = true);
+    try {
+      final profileData = await _secureStorage.getAllProfileData();
+
+      _nicknameController.text = profileData['nickName'] ?? '';
+      _fullNameController.text = profileData['fullName'] ?? '';
+      _emailController.text = await _secureStorage.getUserName() ?? '';
+      _phoneController.text = profileData['phoneNumber'] ?? '';
+      _emergencyContactController.text = profileData['emergencyContact'] ?? '';
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error loading profile: ${e.toString()}')),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _saveProfile() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => _isLoading = true);
+
+      try {
+        await _secureStorage.setNickName(_nicknameController.text);
+        await _secureStorage.setFullName(_fullNameController.text);
+        await _secureStorage.setPhoneNumber(_phoneController.text);
+        await _secureStorage
+            .setEmergencyContact(_emergencyContactController.text);
+
+        setState(() => _isEditing = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Profile updated successfully'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving profile: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      } finally {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  // Add a logout method
+  Future<void> _handleLogout() async {
+    try {
+      await _secureStorage.setLoggedIn(false);
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        (route) => false,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error logging out: ${e.toString()}')),
+      );
+    }
   }
 
   @override
@@ -47,21 +113,6 @@ class _HaganaProfilePageState extends State<HaganaProfilePage> {
     _emergencyContactController.dispose();
     _emergencyPhoneController.dispose();
     super.dispose();
-  }
-
-  void _saveProfile() {
-    if (_formKey.currentState!.validate()) {
-      // Save profile data
-      setState(() {
-        _isEditing = false;
-      });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profile updated successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
-    }
   }
 
   @override
@@ -89,20 +140,19 @@ class _HaganaProfilePageState extends State<HaganaProfilePage> {
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
-          IconButton(
-            icon: Icon(
-              _isEditing ? Icons.save : Icons.edit,
-              color: isDark ? Colors.white : Colors.black87,
+          if (_isEditing)
+            IconButton(
+              icon: Icon(Icons.save),
+              onPressed: _saveProfile,
+            )
+          else
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () => setState(() => _isEditing = true),
             ),
-            onPressed: () {
-              if (_isEditing) {
-                _saveProfile();
-              } else {
-                setState(() {
-                  _isEditing = true;
-                });
-              }
-            },
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: _handleLogout,
           ),
         ],
       ),
@@ -119,9 +169,10 @@ class _HaganaProfilePageState extends State<HaganaProfilePage> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundColor: isDark ? Colors.white24 : Colors.blue.shade100,
+                      backgroundColor:
+                          isDark ? Colors.white24 : Colors.blue.shade100,
                       child: Text(
-                        _nicknameController.text.isNotEmpty 
+                        _nicknameController.text.isNotEmpty
                             ? _nicknameController.text[0].toUpperCase()
                             : "?",
                         style: TextStyle(
@@ -265,51 +316,60 @@ class _HaganaProfilePageState extends State<HaganaProfilePage> {
                       "Delete Account",
                       style: TextStyle(color: Colors.red),
                     ),
-                    onPressed: _isEditing ? () {
-                      // Show delete confirmation dialog
-                      showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
-                          title: Text(
-                            "Delete Account",
-                            style: TextStyle(
-                              color: isDark ? Colors.white : Colors.black87,
-                            ),
-                          ),
-                          content: Text(
-                            "Are you sure you want to delete your account? This action cannot be undone.",
-                            style: TextStyle(
-                              color: isDark ? Colors.white70 : Colors.black54,
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () => Navigator.pop(context),
-                              child: Text(
-                                "Cancel",
-                                style: TextStyle(
-                                  color: isDark ? Colors.white70 : Colors.black54,
+                    onPressed: _isEditing
+                        ? () {
+                            // Show delete confirmation dialog
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                backgroundColor: isDark
+                                    ? const Color(0xFF0A2164)
+                                    : Colors.white,
+                                title: Text(
+                                  "Delete Account",
+                                  style: TextStyle(
+                                    color:
+                                        isDark ? Colors.white : Colors.black87,
+                                  ),
                                 ),
+                                content: Text(
+                                  "Are you sure you want to delete your account? This action cannot be undone.",
+                                  style: TextStyle(
+                                    color: isDark
+                                        ? Colors.white70
+                                        : Colors.black54,
+                                  ),
+                                ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(
+                                        color: isDark
+                                            ? Colors.white70
+                                            : Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                  ElevatedButton(
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.red,
+                                    ),
+                                    onPressed: () {
+                                      // Handle account deletion
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text(
+                                      "Delete",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                              ),
-                              onPressed: () {
-                                // Handle account deletion
-                                Navigator.pop(context);
-                              },
-                              child: const Text(
-                                "Delete",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    } : null,
+                            );
+                          }
+                        : null,
                   ),
                 ],
               ),

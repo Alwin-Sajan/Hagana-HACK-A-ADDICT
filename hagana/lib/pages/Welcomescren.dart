@@ -4,6 +4,8 @@ import 'package:hagana/pages/CommunityPage.dart';
 import 'package:hagana/pages/HomePage.dart';
 import 'package:hagana/pages/LoginPage.dart';
 import 'package:hagana/pages/SignUp.dart';
+import 'package:hagana/init_setup.dart';
+import 'package:hagana/pages/HaganaHomeScreen.dart';
 
 class Welcomescreen extends StatefulWidget {
   const Welcomescreen({super.key});
@@ -13,15 +15,26 @@ class Welcomescreen extends StatefulWidget {
 }
 
 class _WelcomescreenState extends State<Welcomescreen> {
+  final SecureStorage _secureStorage = SecureStorage();
+
   @override
   void initState() {
     super.initState();
 
-    // Wait for a short duration before navigating to HomeScreen
+    // Check if user is already logged in
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    bool isLoggedIn = await _secureStorage.isLoggedIn();
+
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(
+          builder: (context) =>
+              isLoggedIn ? const HaganaHomeScreen() : const HomeScreen(),
+        ),
       );
     });
   }
