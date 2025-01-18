@@ -135,7 +135,7 @@ class _HaganaSettingsState extends State<HaganaSettings> {
             case 2:
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const CommunityPage()),
+                MaterialPageRoute(builder: (context) =>  CommunityPage()),
               );
               break;
           }

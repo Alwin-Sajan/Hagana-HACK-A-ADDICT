@@ -55,7 +55,7 @@ bottomNavigationBar: BottomNavigationBar(
       case 2:
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => const CommunityPage()),
+          MaterialPageRoute(builder: (context) => CommunityPage()),
         );
         break;
       case 3:

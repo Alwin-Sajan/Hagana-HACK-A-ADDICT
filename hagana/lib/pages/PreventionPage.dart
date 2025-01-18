@@ -11,7 +11,7 @@ class Preventionpage extends StatefulWidget {
 }
 
 class _PreventionpageState extends State<Preventionpage> {
-  final _pages = const [
+  final _pages =  [
     HaganaHomeScreen(),
     Preventionpage(),
     CommunityPage(),
@@ -128,7 +128,7 @@ class _PreventionpageState extends State<Preventionpage> {
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CommunityPage()),
+                      builder: (context) =>  CommunityPage()),
                 );
                 break;
               case 3:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hagana/pages/SignUp.dart';
 import '../pages/LoginPage.dart';
 // import 'HomeScreen.dart'; // Import the HaganaHomeScreen here
 
@@ -21,7 +22,7 @@ class HomeScreen extends StatelessWidget {
               // Navigate to HaganaHomeScreen on clicking the top-right icon
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
+                MaterialPageRoute(builder: (context) => const SignupPage()),
               );
             },
             icon: const Icon(Icons.person, color: Colors.black),
@@ -79,7 +80,7 @@ class HomeScreen extends StatelessWidget {
                 // Navigate to HaganaHomeScreen on clicking "Get Started"
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(builder: (context) => const SignupPage()),
                 );
               },
               style: ElevatedButton.styleFrom(

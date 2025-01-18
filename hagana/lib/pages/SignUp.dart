@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:hagana_app/init_setup.dart';
-import 'package:hagana_app/pages/HaganaHomeScreen.dart';
-import 'package:hagana_app/pages/HaganaProfilePage.dart';
-import 'package:hagana_app/pages/Homepage.dart';
+import 'package:hagana/init_setup.dart';
+import 'package:hagana/pages/HaganaProfilePage.dart';
+import 'package:hagana/pages/HomePage.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends State<SignupPage> {
   bool isChecked = false;
   String email = "";
   String password = "";
@@ -37,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
               },
               child: const Center(
                 child: Text(
-                  "Hagana Login",
+                  "Hagana Register",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
