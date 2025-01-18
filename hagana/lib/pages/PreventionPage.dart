@@ -118,7 +118,7 @@ class _PreventionpageState extends State<Preventionpage> {
                         ),
                       ),
                     ))
-                .toList(),
+                ,
             const SizedBox(height: 24),
             const Text(
               "Emergency Contacts",
@@ -173,7 +173,7 @@ class _PreventionpageState extends State<Preventionpage> {
                         ),
                       ),
                     ))
-                .toList(),
+                ,
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(

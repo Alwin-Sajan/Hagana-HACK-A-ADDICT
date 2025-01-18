@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hagana/pages/ChatPage.dart';
 import 'package:hagana/pages/HaganaHomeScreen.dart';
 import 'package:hagana/pages/HaganaSettings.dart';
 import 'package:hagana/pages/Preventionpage.dart';
 
 class CommunityPage extends StatelessWidget {
+  const CommunityPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +32,10 @@ class CommunityPage extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.chat, color: Colors.white),
             onPressed: () {
-              Navigator.pushNamed(context, '/chatPage');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const ChatPage()),
+              );
             },
           ),
         ],
@@ -64,6 +70,12 @@ class CommunityPage extends StatelessWidget {
         currentIndex: 2,
         onTap: (index) {
           switch (index) {
+            case 0:
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HaganaHomeScreen()),
+              );
+              break;
             case 1:
               Navigator.pushReplacement(
                 context,
@@ -247,30 +259,6 @@ class CommunityPage extends StatelessWidget {
     );
   }
 
-  Widget _buildNavBarItem(
-      IconData icon, String label, bool isSelected, BuildContext context, String route) {
-    return GestureDetector(
-      onTap: () {
-        if (!isSelected) Navigator.pushNamed(context, route);
-      },
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            icon,
-            color: isSelected ? Colors.blue : Colors.grey,
-          ),
-          Text(
-            label,
-            style: TextStyle(
-              color: isSelected ? Colors.blue : Colors.grey,
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 void main() {
