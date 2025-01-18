@@ -4,7 +4,7 @@ import '../pages/LoginPage.dart';
 // import 'HomeScreen.dart'; // Import the HaganaHomeScreen here
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
