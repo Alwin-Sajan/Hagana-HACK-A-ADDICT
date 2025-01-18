@@ -129,11 +129,10 @@ By integrating these features, Hagana provides a holistic approach to recovery, 
 ---
 
 ## Team Members
-- **Alwin Sajan**
+- **Alwin Sajan** 
 - **M S Sreehari** 
 - **Ann K S** 
 
-(Feel free to add contact details or links to GitHub/LinkedIn profiles for each team member.)
 
 ---
 
