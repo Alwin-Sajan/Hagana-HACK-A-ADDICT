@@ -23,7 +23,7 @@ class _WelcomescreenState extends State<Welcomescreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HaganaProfilePage()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     });
   }
