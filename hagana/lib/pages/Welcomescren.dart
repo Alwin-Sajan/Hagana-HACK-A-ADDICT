@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hagana/pages/CommunityPage.dart';
-import 'package:hagana/pages/Homepage.dart';
-import '../error_boundary.dart';
+// import 'package:hagana/pages/CommunityPage.dart';
+import 'package:hagana/pages/HomePage.dart';
+// import 'package:hagana/pages/Homepage.dart';
+// import '../error_boundary.dart';
 
 class Welcomescreen extends StatefulWidget {
   const Welcomescreen({super.key});
@@ -20,7 +21,7 @@ class _WelcomescreenState extends State<Welcomescreen> {
     Future.delayed(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) =>  CommunityPage()),
+        MaterialPageRoute(builder: (context) =>  HomeScreen()),
       );
     });
   }
