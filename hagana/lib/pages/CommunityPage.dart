@@ -30,16 +30,16 @@ class CommunityPage extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.add, 
-              color: isDark ? Colors.white : Colors.black87
+            icon: Icon(Icons.add,
+                color: isDark ? Colors.white : Colors.black87
             ),
             onPressed: () {
               // Add post functionality
             },
           ),
           IconButton(
-            icon: Icon(Icons.chat, 
-              color: isDark ? Colors.white : Colors.black87
+            icon: Icon(Icons.chat,
+                color: isDark ? Colors.white : Colors.black87
             ),
             onPressed: () {
               Navigator.push(
@@ -58,15 +58,11 @@ class CommunityPage extends StatelessWidget {
               child: Column(
                 children: [
                   _buildSection('Community Posts', [
-                    {'title': 'Post 1', 'likes': 20, 'content': 'This is the content of post 1.'},
-                    {'title': 'Post 2', 'likes': 35, 'content': 'This is the content of post 2.'},
-                    {'title': 'Post 3', 'likes': 50, 'content': 'This is the content of post 3.'},
+                    {'title': 'Anti-Drug Campaign', 'likes': 20, 'content': 'Join us in the fight against drug abuse! The campaign aims to raise awareness and provide support for those affected.', 'image': 'assets/images/anti_drug_campaign.png'},
+                    {'title': 'Community Support Day', 'likes': 35, 'content': 'A day dedicated to providing support for those recovering from substance abuse. Join us for free counseling, resources, and a strong community of supporters.', 'image': 'assets/images/community_support_day.png'},
+                    {'title': 'Prevention Workshop', 'likes': 50, 'content': 'Attend our workshop on drug abuse prevention. We’ll cover strategies, coping mechanisms, and share inspiring stories from those who’ve overcome addiction.', 'image': 'assets/images/prevention_workshop.png'},
                   ], _buildPostCard, isDark),
-                  _buildSection('Upcoming Events', [
-                    {'title': 'Anti-Drug Day', 'description': 'This is group 1.'},
-                    {'title': 'Marathon', 'description': 'Marathon'},
-                    {'title': 'Let\'s Talk', 'description': 'Webinar'},
-                  ], _buildGroupCard, isDark),
+
                   _buildSection('Awareness Camp', [
                     {
                       'title': 'Same as U',
@@ -84,6 +80,13 @@ class CommunityPage extends StatelessWidget {
                       'link': 'https://onelifeoneshot.org'
                     },
                   ], _buildCampCard, isDark),
+
+                  _buildSection('Upcoming Events', [
+                    {'title': 'Anti-Drug Day', 'description': 'This is group 1.'},
+                    {'title': 'Marathon', 'description': 'Marathon'},
+                    {'title': 'Let\'s Talk', 'description': 'Webinar'},
+                  ], _buildGroupCard, isDark),
+
                 ],
               ),
             ),
@@ -140,7 +143,7 @@ class CommunityPage extends StatelessWidget {
     );
   }
 
-  Widget _buildSection(String title, List<Map<String, dynamic>> items, 
+  Widget _buildSection(String title, List<Map<String, dynamic>> items,
       Widget Function(Map<String, dynamic>, bool) cardBuilder, bool isDark) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
@@ -192,6 +195,8 @@ class CommunityPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 8.0),
+            post.containsKey('image') ? Image.asset(post['image']) : Container(),
+            SizedBox(height: 8.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -234,8 +239,8 @@ class CommunityPage extends StatelessWidget {
               group['description'],
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: isDark ? Colors.white70 : Colors.black54,
-                fontSize: 12
+                  color: isDark ? Colors.white70 : Colors.black54,
+                  fontSize: 12
               ),
             ),
             SizedBox(height: 8.0),
