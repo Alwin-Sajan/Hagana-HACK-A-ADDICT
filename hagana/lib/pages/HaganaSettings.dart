@@ -35,12 +35,17 @@ class _HaganaSettingsState extends State<HaganaSettings> {
             color: isDark ? Colors.white : Colors.black87,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, 
-            color: isDark ? Colors.white : Colors.black87
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: isDark ? Colors.white : Colors.black87
+            ),
+            onPressed: (){
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HaganaHomeScreen()),
+              );
+            },
+          )
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 16),

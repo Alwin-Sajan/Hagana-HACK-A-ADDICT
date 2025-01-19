@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hagana/pages/HaganaHomeScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:hagana/main.dart';
 import 'package:hagana/init_setup.dart';
@@ -132,13 +133,17 @@ class _HaganaProfilePageState extends State<HaganaProfilePage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: isDark ? Colors.white : Colors.black87,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,
+                color: isDark ? Colors.white : Colors.black87
+            ),
+            onPressed: (){
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const HaganaHomeScreen()),
+              );
+            },
           ),
-          onPressed: () => Navigator.pop(context),
-        ),
         actions: [
           if (_isEditing)
             IconButton(

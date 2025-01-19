@@ -79,7 +79,7 @@ class _LoginPageState extends State<SignupPage> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => const HomeScreen()),
+              MaterialPageRoute(builder: (context) => const HaganaProfilePage()),
             );
           },
         ),
