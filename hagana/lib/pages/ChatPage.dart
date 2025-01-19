@@ -1,7 +1,8 @@
-// Flutter Frontend: Minimalist Chat Page
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:hagana/main.dart';
+// import 'package:tflite/tflite.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
+import '../main.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -18,53 +19,103 @@ class _ChatPageState extends State<ChatPage> {
       "message": "Hello! How can we help you today?",
       "time": "09:00 AM",
       "isRead": true,
+      "mood": "Neutral",
     },
-    {
-      "user": "Support",
-      "message": "We're here to support your recovery journey.",
-      "time": "09:01 AM",
-      "isRead": true,
-    }
-  ];
-
-  final List<String> _quickResponses = [
-    "I need help right now",
-    "Looking for support groups",
-    "Need to talk to someone",
-    "Emergency assistance",
   ];
 
   bool _isTyping = false;
 
-  void _sendMessage() {
+  @override
+  void initState() {
+    super.initState();
+    _loadModel();
+  }
+
+  Future<void> _loadModel() async {
+  try {
+    await Tflite.loadModel(
+      model: "assets/sentiment_model.tflite",
+      labels: "assets/labels.txt",
+    );
+    print("Model loaded successfully!");
+  } catch (e) {
+    print("Error loading model: $e");
+  }
+}
+
+
+Future<String> _analyzeMood(String message) async {
+  try {
+    final results = await Tflite.runModelOnText(
+      text: message,
+      numResults: 3,  // Number of results you want
+    );
+
+    if (results != null && results.isNotEmpty) {
+      print("Analysis results: $results");
+      // Assuming the first result is the most relevant mood
+      return results[0]['label'] ?? "Neutral";  // Default to "Neutral" if no label
+    }
+    return "Neutral";  // Return default if no results
+  } catch (e) {
+    print("Error analyzing mood: $e");
+    return "Neutral";  // Return "Neutral" on error
+  }
+}
+
+
+  void _sendMessage() async {
     if (_messageController.text.trim().isNotEmpty) {
+      final userMessage = _messageController.text.trim();
       setState(() {
         _messages.add({
           "user": "You",
-          "message": _messageController.text,
+          "message": userMessage,
           "time": "${DateTime.now().hour}:${DateTime.now().minute}",
           "isRead": false,
+          "mood": "Neutral",
         });
       });
+
       _messageController.clear();
-      // Simulate response after 1 second
-      Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _isTyping = true;
+      });
+
+      final mood = await _analyzeMood(userMessage);
+
+      Future.delayed(const Duration(seconds: 2), () {
         setState(() {
-          _isTyping = true;
-        });
-        Future.delayed(const Duration(seconds: 2), () {
-          setState(() {
-            _isTyping = false;
-            _messages.add({
-              "user": "Support",
-              "message": "Thank you for reaching out. A support member will respond shortly.",
-              "time": "${DateTime.now().hour}:${DateTime.now().minute}",
-              "isRead": true,
-            });
+          _isTyping = false;
+          _messages.add({
+            "user": "Support",
+            "message": _getResponseBasedOnMood(mood),
+            "time": "${DateTime.now().hour}:${DateTime.now().minute}",
+            "isRead": true,
+            "mood": mood,
           });
         });
       });
     }
+  }
+
+  String _getResponseBasedOnMood(String mood) {
+    switch (mood) {
+      case "Positive":
+        return "Glad to hear that! Let us know if there's anything we can do.";
+      case "Negative":
+        return "I'm sorry to hear that. We're here to help you. Can you tell us more?";
+      case "Neutral":
+      default:
+        return "Thanks for sharing. How can we assist you further?";
+    }
+  }
+
+  @override
+  void dispose() {
+    Tflite.close();
+    _messageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -73,186 +124,72 @@ class _ChatPageState extends State<ChatPage> {
     final isDark = themeProvider.isDarkMode;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF051650) : Colors.white,
+      backgroundColor: isDark
+          ? const Color(0xFF051650) // Dark theme background
+          : Colors.white, // Light theme background
       appBar: AppBar(
-        backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
-        title: Column(
-          children: [
-            Text(
-              "Support Chat",
-              style: TextStyle(
-                color: isDark ? Colors.white : Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              "Online - Usually responds in 5 minutes",
-              style: TextStyle(
-                color: isDark ? Colors.white70 : Colors.black54,
-                fontSize: 12,
-              ),
-            ),
-          ],
-        ),
-        centerTitle: true,
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
+        title: Text(
+          "Support Chat",
+          style: TextStyle(
             color: isDark ? Colors.white : Colors.black87,
           ),
-          onPressed: () => Navigator.pop(context),
         ),
+        centerTitle: true,
         actions: [
-          IconButton(
-            icon: Icon(
-              Icons.info_outline,
-              color: isDark ? Colors.white : Colors.black87,
-            ),
-            onPressed: () {
-              // Show chat info/guidelines
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  backgroundColor: isDark ? const Color(0xFF0A2164) : Colors.white,
-                  title: Text(
-                    'Chat Guidelines',
-                    style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
-                  ),
-                  content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildGuideline('24/7 Support Available', Icons.access_time),
-                      _buildGuideline('Confidential Conversations', Icons.lock_outline),
-                      _buildGuideline('Professional Support Team', Icons.verified_user_outlined),
-                      _buildGuideline('Emergency Services Available', Icons.emergency_outlined),
-                    ],
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        'Got it',
-                        style: TextStyle(
-                          color: isDark ? Colors.white : Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              );
+          Switch(
+            value: isDark,
+            onChanged: (value) {
+              themeProvider.toggleTheme(value);
             },
           ),
         ],
       ),
       body: Column(
         children: [
-          // Quick Responses
-          Container(
-            height: 50,
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _quickResponses.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? const Color(0xFF1A237E) : Colors.blue.shade100,
-                      foregroundColor: isDark ? Colors.white : Colors.black87,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    onPressed: () {
-                      _messageController.text = _quickResponses[index];
-                      _sendMessage();
-                    },
-                    child: Text(_quickResponses[index]),
-                  ),
-                );
-              },
-            ),
-          ),
-          
-          // Messages List
           Expanded(
             child: ListView.builder(
               itemCount: _messages.length,
               padding: const EdgeInsets.all(8),
               itemBuilder: (context, index) {
                 final message = _messages[index];
-                return Column(
-                  children: [
-                    if (index == 0 || _shouldShowDate(index))
-                      _buildDateDivider(_messages[index]['time']),
-                    MessageBubble(
-                      message: message,
-                      isDark: isDark,
-                    ),
-                  ],
+                return MessageBubble(
+                  message: message,
+                  isDark: isDark,
                 );
               },
             ),
           ),
-
-          // Typing Indicator
           if (_isTyping)
-            Container(
+            Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              alignment: Alignment.centerLeft,
               child: Text(
                 'Support is typing...',
                 style: TextStyle(
                   color: isDark ? Colors.white70 : Colors.black54,
-                  fontSize: 12,
                 ),
               ),
             ),
-
-          // Message Input
           Container(
-            color: isDark ? const Color(0xFF0A2164) : Colors.white,
             padding: const EdgeInsets.all(8),
+            color: isDark
+                ? const Color(0xFF0A2164) // Input container for dark theme
+                : Colors.white, // Input container for light theme
             child: Row(
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.attach_file,
-                    color: isDark ? Colors.white70 : Colors.black54,
-                  ),
-                  onPressed: () {
-                    // Handle file attachment
-                  },
-                ),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
-                    style: TextStyle(
-                      color: isDark ? Colors.white : Colors.black87,
-                    ),
                     decoration: InputDecoration(
                       hintText: "Type your message...",
-                      hintStyle: TextStyle(
-                        color: isDark ? Colors.white70 : Colors.black54,
-                      ),
                       filled: true,
-                      fillColor: isDark ? const Color(0xFF1A237E) : Colors.grey.shade100,
+                      fillColor: isDark
+                          ? const Color(0xFF1A237E) // Input field background for dark theme
+                          : Colors.grey.shade100, // Input field background for light theme
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                         borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                        vertical: 10,
-                        horizontal: 16,
-                      ),
                     ),
-                    maxLines: null,
-                    keyboardType: TextInputType.multiline,
                   ),
                 ),
                 IconButton(
@@ -269,50 +206,6 @@ class _ChatPageState extends State<ChatPage> {
       ),
     );
   }
-
-  Widget _buildGuideline(String text, IconData icon) {
-    final isDark = Provider.of<ThemeProvider>(context).isDarkMode;
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: isDark ? Colors.white70 : Colors.black54,
-          ),
-          const SizedBox(width: 12),
-          Text(
-            text,
-            style: TextStyle(
-              color: isDark ? Colors.white70 : Colors.black87,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  bool _shouldShowDate(int index) {
-    if (index == 0) return true;
-    final previousMessage = _messages[index - 1];
-    final currentMessage = _messages[index];
-    return previousMessage['time'] != currentMessage['time'];
-  }
-
-  Widget _buildDateDivider(String time) {
-    final isDark = Provider.of<ThemeProvider>(context).isDarkMode;
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 16),
-      child: Text(
-        time,
-        style: TextStyle(
-          color: isDark ? Colors.white70 : Colors.black54,
-          fontSize: 12,
-        ),
-      ),
-    );
-  }
 }
 
 class MessageBubble extends StatelessWidget {
@@ -320,68 +213,39 @@ class MessageBubble extends StatelessWidget {
   final bool isDark;
 
   const MessageBubble({
-    Key? key,
     required this.message,
     required this.isDark,
-  }) : super(key: key);
+  });
+
+  Color _getMoodColor(String mood) {
+    switch (mood) {
+      case "Positive":
+        return isDark ? Colors.green.shade700 : Colors.green.shade100;
+      case "Negative":
+        return isDark ? Colors.red.shade700 : Colors.red.shade100;
+      case "Neutral":
+      default:
+        return isDark ? const Color(0xFF1A237E) : Colors.grey.shade200;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final mood = message['mood'] ?? "Neutral";
+
     return Align(
       alignment: message['user'] == 'You' ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: message['user'] == 'You'
-              ? (isDark ? const Color(0xFF0A2164) : Colors.blue.shade100)
-              : (isDark ? const Color(0xFF1A237E) : Colors.grey.shade200),
+          color: _getMoodColor(mood),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  message['user'],
-                  style: TextStyle(
-                    color: isDark ? Colors.white70 : Colors.black87,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12,
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  message['time'],
-                  style: TextStyle(
-                    color: isDark ? Colors.white54 : Colors.black54,
-                    fontSize: 10,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              message['message'],
-              style: TextStyle(
-                color: isDark ? Colors.white : Colors.black87,
-                fontSize: 14,
-              ),
-            ),
-            if (message['user'] == 'You')
-              Align(
-                alignment: Alignment.centerRight,
-                child: Icon(
-                  message['isRead'] ? Icons.done_all : Icons.done,
-                  size: 16,
-                  color: message['isRead']
-                      ? (isDark ? Colors.white70 : Colors.blue)
-                      : (isDark ? Colors.white54 : Colors.grey),
-                ),
-              ),
-          ],
+        child: Text(
+          message['message'],
+          style: TextStyle(
+            color: isDark ? Colors.white : Colors.black87,
+          ),
         ),
       ),
     );

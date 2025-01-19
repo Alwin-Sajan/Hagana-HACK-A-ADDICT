@@ -40,6 +40,8 @@ dependencies:
   flutter_native_splash: ^2.2.19
   provider: ^6.0.5
   url_launcher: ^6.2.5
+  tflite: ^1.1.2
+  tflite_flutter: ^0.11.0
   
 dev_dependencies:
   flutter_test:
@@ -96,6 +98,8 @@ flutter:
 
   assets:
     - assets/images/hagana_logo.png
+    - assets/sentiment_model.tflite
+    - assets/labels.txt
 
 flutter_native_splash:
     color: "#051650" # Background color
