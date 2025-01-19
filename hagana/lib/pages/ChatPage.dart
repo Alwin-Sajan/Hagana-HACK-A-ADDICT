@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:tflite/tflite.dart';
-import 'package:tflite_flutter/tflite_flutter.dart';
+import 'package:tflite/tflite.dart';
 import '../main.dart';
+import 'dart:typed_data';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -46,20 +46,20 @@ class _ChatPageState extends State<ChatPage> {
 
 Future<String> _analyzeMood(String message) async {
   try {
-    final results = await Tflite.runModelOnText(
-      text: message,
-      numResults: 3,  // Number of results you want
+    final List? results = await Tflite.runModelOnBinary(
+      binary: Uint8List.fromList(message.codeUnits),
+      numResults: 2,
+      threshold: 0.5,
     );
 
     if (results != null && results.isNotEmpty) {
       print("Analysis results: $results");
-      // Assuming the first result is the most relevant mood
-      return results[0]['label'] ?? "Neutral";  // Default to "Neutral" if no label
+      return results[0]['label'] ?? "Neutral";
     }
-    return "Neutral";  // Return default if no results
+    return "Neutral";
   } catch (e) {
     print("Error analyzing mood: $e");
-    return "Neutral";  // Return "Neutral" on error
+    return "Neutral";
   }
 }
 
@@ -220,12 +220,12 @@ class MessageBubble extends StatelessWidget {
   Color _getMoodColor(String mood) {
     switch (mood) {
       case "Positive":
-        return isDark ? Colors.green.shade700 : Colors.green.shade100;
+        return Colors.green;
       case "Negative":
-        return isDark ? Colors.red.shade700 : Colors.red.shade100;
+        return Colors.red;
       case "Neutral":
       default:
-        return isDark ? const Color(0xFF1A237E) : Colors.grey.shade200;
+        return Colors.grey;
     }
   }
 
@@ -236,16 +236,35 @@ class MessageBubble extends StatelessWidget {
     return Align(
       alignment: message['user'] == 'You' ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: _getMoodColor(mood),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          message['message'],
-          style: TextStyle(
-            color: isDark ? Colors.white : Colors.black87,
-          ),
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+        child: Column(
+          crossAxisAlignment: message['user'] == 'You' 
+              ? CrossAxisAlignment.end 
+              : CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: isDark ? const Color(0xFF1A237E) : Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                message['message'],
+                style: TextStyle(
+                  color: isDark ? Colors.white : Colors.black87,
+                ),
+              ),
+            ),
+            Container(
+              height: 2,
+              width: 40,
+              margin: const EdgeInsets.only(top: 2),
+              decoration: BoxDecoration(
+                color: _getMoodColor(mood),
+                borderRadius: BorderRadius.circular(1),
+              ),
+            ),
+          ],
         ),
       ),
     );
